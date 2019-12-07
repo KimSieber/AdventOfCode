@@ -1,0 +1,61 @@
+'#####################################
+'##### Advent of Code
+'#####
+'##### Day 2: 1202 Program Alarm
+'##### Working Computer - Gravity
+'#####################################
+'##### Eingabewerte
+Const cInput = "1,0,0,3,1,1,2,3,1,3,4,3,1,5,0,3,2,1,6,19,1,19,6,23,2,23,6,27,2,6,27,31,2,13,31,35,1,9,35,39,2,10,39,43,1,6,43,47,1,13,47,51,2,6,51,55,2,55,6,59,1,59,5,63,2,9,63,67,1,5,67,71,2,10,71,75,1,6,75,79,1,79,5,83,2,83,10,87,1,9,87,91,1,5,91,95,1,95,6,99,2,10,99,103,1,5,103,107,1,107,6,111,1,5,111,115,2,115,6,119,1,119,6,123,1,123,10,127,1,127,13,131,1,131,2,135,1,135,5,0,99,2,14,0,0"
+
+Function workingComputer(sInput As String, manipulateValue1 As Integer, manipulateValue2 As Integer)
+    '##### Werte in Array laden
+    Dim aValues As Variant
+    aValues = Split(sInput, ",")
+    '##### Vorgabe: Austausch vorab von 2 Zahlen
+    aValues(1) = manipulateValue1
+    aValues(2) = manipulateValue2
+    '##### Schleife je Verarbeitungssatz (4 Zahlen)
+    Dim i As Integer
+    Dim firstPosition As Integer
+    Dim secondPosition As Integer
+    Dim targetPosition As Integer
+    For i = LBound(aValues) To UBound(aValues) Step 4
+        '##### Ende, wenn Befehl = 99
+        If aValues(i) = 99 Then Exit For
+        '##### Auslesen der Parameter
+        firstPosition = Int(aValues(i + 1))
+        secondPosition = Int(aValues(i + 2))
+        targetPosition = Int(aValues(i + 3))
+'MsgBox "i=" & i & Chr(10) & "aValues(i)=" & aValues(i) & Chr(10) & "firstPosition=" & firstPosition & " #Values=" & aValues(firstPosition) & Chr(10) & "secondPosition=" & secondPosition & " #Value=" & aValues(secondPosition) & Chr(10) & "targetPosition=" & targetPosition & " #Values=" & aValues(targetPosition)
+        '##### Rechnung abhängig vom Befehlt (Fehlermeldung wenn unerwarteter Befehl)
+        If aValues(i) = 1 Then
+           aValues(targetPosition) = Int(aValues(firstPosition)) + Int(aValues(secondPosition))
+        ElseIf aValues(i) = 2 Then
+           aValues(targetPosition) = Int(aValues(firstPosition)) * Int(aValues(secondPosition))
+        Else
+            MsgBox "Error, aValues(" & i & ") = " & aValues(i)
+            Stop
+        End If
+    Next
+    
+    '##### Rückgabewert gleich erste Position (=0) der Zahlenfolge
+    workingComputer = aValues(0)
+End Function
+
+Sub test()
+    '##### PART ONE:
+    MsgBox "ENDE: Rückgabewert=" & workingComputer(cInput, 12, 2)
+    '##### PART TWO:
+    Dim i As Integer
+    Dim j As Integer
+    Dim returnValue As Integer
+    For i = 0 To 100
+        For j = 0 To 100
+            If workingComputer(cInput, i, j) = 19690720 Then
+                returnValue = (100 * i) + j
+                MsgBox "GEFUNDEN" & Chr(10) & "aValues(1) = " & i & Chr(10) & "aValues(2) = " & j & Chr(10) & "returnValue=" & returnValue
+            End If
+        Next
+    Next
+    MsgBox "ENDE"
+End Sub
