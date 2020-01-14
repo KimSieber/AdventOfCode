@@ -1,5 +1,3 @@
-
-
 import java.util.Scanner;
 import java.util.Arrays;
 
@@ -153,5 +151,3 @@ public class Day9{
 		System.out.println("ready.");
     }
 }
-
-```
