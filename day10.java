@@ -123,8 +123,19 @@ if (x1==11 && y1==13 && y2==13) {
 		    DiffX==-1 || DiffY==-1 ) {
 			return result;
 		}
+		// Wenn eine Differenz 0 ist, kann die andere nur 1/-1 sein.
+		if (DiffX == 0) {
+		    result[0] = 0;
+		    result[1] = (DiffY<0?-1:1);
+		    return result;
+		}
+		if (DiffY == 0) {
+		    result[0] = (DiffX<0?-1:1);
+		    result[1] = 0;
+		    return result;
+		}		
 		// Divisionen prüfen, um Minimal-Differenz zu ermitteln
-		for (int i=20; i>0; i--) {
+		for (int i=40; i>0; i--) {
 			if (result[0] % i == 0  &&
 			    result[1] % i == 0 ) {
 				result[0] = result[0] / i;
