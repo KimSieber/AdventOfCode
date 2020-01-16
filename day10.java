@@ -79,7 +79,7 @@ if (x==11 && y==13) {
 		int[] MinDiff = this.minimizeDiff(DiffX, DiffY);
 		int MinDiffX = MinDiff[0];
 		int MinDiffY = MinDiff[1];
-		// Vorzeichen entfernen um höchsten Zähler für Schleife zu finden (Weg von xy1 zu xy2)
+		// Vorzeichen entfernen um hoechsten Zaehler fuer Schleife zu finden (Weg von xy1 zu xy2)
 		int MDX = (MinDiffX<0?MinDiffX*-1:MinDiffX);
 		int MDY = (MinDiffY<0?MinDiffY*-1:MinDiffY);
 		int iCnt = (MDX>MDY ? DiffX/MinDiffX : DiffY/MinDiffY);
@@ -89,14 +89,14 @@ if (x1==11 && y1==13 && y2==13) {
 	System.out.println("checkVisible("+x1+","+y1+","+x2+","+y2+")  ->DiffX,Y="+DiffX+","+DiffY+"  MinDiffX,Y="+ MinDiffX+","+ MinDiffY);
 }
 **/
-		// In Schleife Weg von xy1 zu xy2 abfahren und prüfen, wann erster Asteroid (=#) auftraucht
+		// In Schleife Weg von xy1 zu xy2 abfahren und pruefen, wann erster Asteroid (=#) auftraucht
 		int tmpX, tmpY;	
 		for (int i=1; i<=iCnt; i++) {
 			tmpX = x1+(MinDiffX * i);
 			tmpY = y1+(MinDiffY * i);
 			// Wenn ein Asteroid gefunden ...
 			if (this.InputMap[tmpY][tmpX] == '#') {
-				// ... prüfen, ob es der geprüfte Asteroid (xy2) ist
+				// ... pruefen, ob es der gepruefte Asteroid (xy2) ist
 				if (x2 == tmpX && y2 == tmpY) {
 /** Testausgabe					
 if (x1==11 && y1==13 && y2==13) {
@@ -118,24 +118,13 @@ if (x1==11 && y1==13 && y2==13) {
 	
 	private int[] minimizeDiff(int DiffX, int DiffY) {
 		int[] result = {DiffX, DiffY};
-		// Bei 1 ist keine Division möglich, daher direkt Eigabe als MinimalDifferenz zurückgeben
+		// Bei 1 ist keine Division moeglich, daher direkt Eigabe als MinimalDifferenz zurueckgeben
 		if (DiffX== 1 || DiffY== 1 ||
 		    DiffX==-1 || DiffY==-1 ) {
 			return result;
 		}
-		// Wenn eine Differenz 0 ist, kann die andere nur 1/-1 sein.
-		if (DiffX == 0) {
-		    result[0] = 0;
-		    result[1] = (DiffY<0?-1:1);
-		    return result;
-		}
-		if (DiffY == 0) {
-		    result[0] = (DiffX<0?-1:1);
-		    result[1] = 0;
-		    return result;
-		}		
-		// Divisionen prüfen, um Minimal-Differenz zu ermitteln
-		for (int i=40; i>0; i--) {
+		// Divisionen pruefen, um Minimal-Differenz zu ermitteln, Zaehler als Anzahl Zeilen/Spalten = hoechster dividierbarer Wert
+		for (int i=(this.maxX<this.maxY ? this.maxY : this.maxX); i>0; i--) {
 			if (result[0] % i == 0  &&
 			    result[1] % i == 0 ) {
 				result[0] = result[0] / i;
