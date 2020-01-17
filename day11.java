@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.util.Arrays;
 
-
 public class day11{
     public static void main(String args[]){
 		IncodeComputer IC = new IncodeComputer();
@@ -16,32 +15,26 @@ public class day11{
 class IncodeComputer{
 	private Scanner reader;
 	private String[] vProg;
-	private Integer vPointer, vInst, vIdx1, vIdx2, vIdx3, vRelativeBase;
+	private Integer vPointer=0, vInst, vIdx1, vIdx2, vIdx3, vRelativeBase=0;
 	
-	private int countRV = 0;
+	private int countRV;
 	private int[] ReturnValues = new int[2];
-	private int InputValue;
 
 	public IncodeComputer(){
 		this.reader = new Scanner(System.in);
-		this.vProg = this.readLine().split(",");
-		this.vPointer = 0;
-		this.vRelativeBase = 0;
+		this.vProg = this.reader.nextLine().split(",");
 	}
 	
 	public int[] runIntcodeComputer(int Input){
+	    this.countRV = 0;
 		for (int i = 0; i < 1000; i++) {
 			this.readInstruction();
 			if(!this.runDiagnostic(Input)) {
-			    return ReturnValues;
+			    return ReturnValues;                ==> wenn 99 behandeln
 			}
 		}
 		System.out.println("runIntcodeComputer:ERROR");
 		return null;
-	}
-	
-	private String readLine(){
-	    return this.reader.nextLine();
 	}
 	
 	private Long getValue(int pIndex){
@@ -92,63 +85,63 @@ class IncodeComputer{
 		return null;
 	}
 	
-	private boolean runDiagnostic (int Input){
+	private boolean runDiagnostic (int pInput){
 		switch (this.vInst) {
 			case 99:
-				System.exit(0);
+				return false;
 			case 1:
-				setValue(vIdx3, getValue(vIdx1) + getValue(vIdx2));
+				this.setValue(this.vIdx3, this.getValue(this.vIdx1) + this.getValue(this.vIdx2));
 				vPointer += 4;
 				break;
 			case 2:
-				setValue(vIdx3, getValue(vIdx1) * getValue(vIdx2));
+				this.setValue(this.vIdx3, this.getValue(this.vIdx1) * this.getValue(this.vIdx2));
 				vPointer += 4;
 				break;
 			case 3:
-				setValue(vIdx1, Input);
-				vPointer += 2;
+				this.setValue(this.vIdx1, pInput);
+				this.vPointer += 2;
 				break;
 			case 4:
-				this.ReturnValues[countRV] = Integer.parseInt(this.vProg[vIdx1]);
-				countRV++;
-				vPointer += 2;
-				if (countRV > 1) {
+				this.ReturnValues[this.countRV] = Integer.parseInt(this.vProg[this.vIdx1]);
+				this.countRV++;
+				this.vPointer += 2;
+				if (this.countRV > 1) {
 				    return false;
 				}
 				break;
 			case 5:
-				if (getValue(vIdx1).intValue() != 0) { 
-				    vPointer = getValue(vIdx2).intValue();
+				if (this.getValue(this.vIdx1).intValue() != 0) { 
+				   this. vPointer = this.getValue(this.vIdx2).intValue();
 				} else { 
-				    vPointer += 3; 
+				    this.vPointer += 3; 
 				}
 				break;
 			case 6:
-				if (getValue(vIdx1).intValue() == 0) {
-					vPointer = getValue(vIdx2).intValue();
+				if (this.getValue(this.vIdx1).intValue() == 0) {
+					this.vPointer = this.getValue(this.vIdx2).intValue();
 				} else {
-					vPointer += 3;
+					this.vPointer += 3;
 				}
 				break;
 			case 7:
-				if (getValue(vIdx1) < getValue(vIdx2)) {
-					setValue(vIdx3, 1);
+				if (this.getValue(this.vIdx1) < this.getValue(this.vIdx2)) {
+					this.setValue(this.vIdx3, 1);
 				} else {
-					setValue(vIdx3, 0);
+					this.setValue(this.vIdx3, 0);
 				}
-				vPointer += 4;
+				this.vPointer += 4;
 				break;
 			case 8:
-				if (getValue(vIdx1) == getValue(vIdx2)) {
-					setValue(vIdx3, 1);
+				if (this.getValue(this.vIdx1) == this.getValue(this.vIdx2)) {
+					this.setValue(this.vIdx3, 1);
 				} else {
-					setValue(vIdx3, 0);
+					this.setValue(this.vIdx3, 0);
 				}
-				vPointer += 4;
+				this.vPointer += 4;
 				break;
 			case 9:
-				vRelativeBase += getValue(vIdx1).intValue();
-			    vPointer += 2;
+				this.vRelativeBase += this.getValue(this.vIdx1).intValue();
+			    this.vPointer += 2;
 				break;
 		}
 		return true;
