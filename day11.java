@@ -6,24 +6,20 @@ public class day11{
     public static void main(String args[]){
 		IncodeComputer IC = new IncodeComputer();
 		
-		IC.runIntcodeComputer(0);
-		
-		/**
-        for (int i=0; i<IC.ReturnValues.length; i++) {
-            System.out.print(IC.ReturnValues[i]+",");
-        }
-		System.out.println("");
-		**/
+		int[] ReturnValues = IC.runIntcodeComputer(0);
+		System.out.println("ReturnValues = "+ReturnValues[0]+" | "+ReturnValues[1]);
+
 		System.out.println("ready.");
     }
 }
+
 class IncodeComputer{
 	private Scanner reader;
 	private String[] vProg;
 	private Integer vPointer, vInst, vIdx1, vIdx2, vIdx3, vRelativeBase;
 	
 	private int countRV = 0;
-	public int[] ReturnValues = new int[1];
+	private int[] ReturnValues = new int[2];
 	private int InputValue;
 
 	public IncodeComputer(){
@@ -32,16 +28,16 @@ class IncodeComputer{
 		this.vPointer = 0;
 		this.vRelativeBase = 0;
 	}
-
 	
-	public void runIntcodeComputer(int Input){
+	public int[] runIntcodeComputer(int Input){
 		for (int i = 0; i < 1000; i++) {
 			this.readInstruction();
 			if(!this.runDiagnostic(Input)) {
-			    return;
+			    return ReturnValues;
 			}
 		}
 		System.out.println("runIntcodeComputer:ERROR");
+		return null;
 	}
 	
 	private String readLine(){
@@ -65,22 +61,6 @@ class IncodeComputer{
 			vProg = Arrays.copyOf(vProg, pIndex+1);
 		}
 		vProg[pIndex] =Long.toString(pValue);
-	}
-	
-	private void printValue(int pIndex){
-	    /**
-	     * Ausgabe fuer Aufgabe 9
-	     **/
-		System.out.println(this.vProg[pIndex]);
-		
-		/**
-		 * Ausgabe Werte in ResultValues
-		 **/
-        if (countRV>this.ReturnValues.length-1) {
-            this.ReturnValues = Arrays.copyOf(this.ReturnValues, countRV+1);
-        }
-        this.ReturnValues[countRV] = Integer.parseInt(this.vProg[pIndex]);
-        countRV++;
 	}
 	
 	private void readInstruction(){
@@ -113,7 +93,7 @@ class IncodeComputer{
 	}
 	
 	private boolean runDiagnostic (int Input){
-		switch (vInst) {
+		switch (this.vInst) {
 			case 99:
 				System.exit(0);
 			case 1:
@@ -129,10 +109,13 @@ class IncodeComputer{
 				vPointer += 2;
 				break;
 			case 4:
-				this.printValue(vIdx1);
+				this.ReturnValues[countRV] = Integer.parseInt(this.vProg[vIdx1]);
+				countRV++;
 				vPointer += 2;
-				return false;
-				//break;
+				if (countRV > 1) {
+				    return false;
+				}
+				break;
 			case 5:
 				if (getValue(vIdx1).intValue() != 0) { 
 				    vPointer = getValue(vIdx2).intValue();
