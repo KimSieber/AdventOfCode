@@ -3,12 +3,114 @@ import java.util.Arrays;
 
 public class day11{
     public static void main(String args[]){
-		IncodeComputer IC = new IncodeComputer();
+		PaintingRobot PR = new PaintingRobot();
 		
-		int[] ReturnValues = IC.runIntcodeComputer(0);
-		System.out.println("ReturnValues = "+ReturnValues[0]+" | "+ReturnValues[1]);
-
 		System.out.println("ready.");
+    }
+}
+
+class PaintingRobot {
+    IncodeComputer ICC;
+    /** PanelMap-Belegung ******
+     *  -1 = schwarz, aber noch nicht gestrichen
+     *  0    = schwarz gestrichen
+     *  1    = weiss gestrichen
+     * 
+     *  Koordinaten [y][x]
+     **/
+    int[][] PanelMap = new int[500][500];
+    /** Koordinaten von ActPos *********
+     *  0 = x-Wert
+     *  1 = y-Wert
+     **/
+    int[] actPos = {250, 250};
+    /** direction-Belegung ******
+     *  0 = ^  (nach oben)
+     *  1 = >  (nach rechts)
+     *  2 = v  (nach unten
+     *  3 = <  (nach links)
+     **/
+    int direction = 0;
+    
+    public PaintingRobot(){
+        IncodeComputer IC = new IncodeComputer();
+        /** 
+         * Initialisiere Panel-Map mit -1
+         **/
+        for (int i=0; i<this.PanelMap.length; i++) {
+            for (int j=0; j<this.PanelMap[0].length; j++) {
+                this.PanelMap[i][j] = -1;
+            }
+        }
+        int ret;
+		do {
+		    ret = IC.runIntcodeComputer(this.getColor());
+    		if (ret!=99) {
+    		    this.paintPanel(IC.ReturnValues[0]);
+    		    this.turnAndMove(IC.ReturnValues[1]);
+    		    //System.out.println("ReturnValues = "+ReturnValues[0]+" | "+ReturnValues[1]);
+    		}
+		} while(ret != 99);
+        int cPP = countPaintedPanels();
+        System.out.println("countPaintedPanels = "+cPP);
+    }
+
+    private int getColor() {
+        int x = this.actPos[0];
+        int y = this.actPos[1];
+        
+        if (this.actPos[0]<10 || this.actPos[1]<10) {
+            System.out.println("Koordinaten reichen nicht aus?: actPos="+x+"|"+y);
+        }
+        
+        return (this.PanelMap[y][x]<0 ? 0 : this.PanelMap[y][x]);
+    }
+    
+    private void paintPanel(int color) {
+        this.PanelMap[this.actPos[1]][this.actPos[0]] = color;
+    }
+    
+    private void turnAndMove(int turn) {
+        if (turn == 0) {
+            this.direction -= 1;
+        } else {
+            this.direction += 1;
+        }
+        if (this.direction < 0) {
+            this.direction = 3;
+        }
+        if (this.direction > 3) {
+            this.direction = 0;
+        }
+        switch (this.direction) {
+            case 0:
+                this.actPos[1] -= 1;
+                break;
+            case 1:
+                this.actPos[0] += 1;
+                break;
+            case 2:
+                this.actPos[1] += 1;
+                break;
+            case 3:
+                this.actPos[0] -= 1;
+                break;
+            default:
+                System.out.println("Error turnAndMove("+turn+") this.direction="+this.direction);
+                System.exit(-1);
+        }
+    }
+    
+    private int countPaintedPanels() {
+        int count = 0;
+        for (int y=0; y<this.PanelMap.length; y++) {
+            for (int x=0; x<this.PanelMap.length; x++) {
+                if (this.PanelMap[y][x] != -1) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
 
@@ -18,23 +120,34 @@ class IncodeComputer{
 	private Integer vPointer=0, vInst, vIdx1, vIdx2, vIdx3, vRelativeBase=0;
 	
 	private int countRV;
-	private int[] ReturnValues = new int[2];
+	public int[] ReturnValues = new int[2];
 
 	public IncodeComputer(){
 		this.reader = new Scanner(System.in);
 		this.vProg = this.reader.nextLine().split(",");
 	}
 	
-	public int[] runIntcodeComputer(int Input){
+	/**
+	 * Rueckgabewerte:
+	 * 99 = Programm endet
+	 *  0 = Beide Rueckgabewerte gefuellt, Programm bereit zum weiter machen
+	 **/
+	public int runIntcodeComputer(int Input){
 	    this.countRV = 0;
 		for (int i = 0; i < 1000; i++) {
 			this.readInstruction();
-			if(!this.runDiagnostic(Input)) {
-			    return ReturnValues;                ==> wenn 99 behandeln
+			switch(this.runDiagnostic(Input)) {
+			    case 99:
+			        return 99;
+    			case 0:
+    			    return 0;
+    			case 1: 
+    			    // Verarbeitet, naechster Befehl
+    			    break;
 			}
 		}
 		System.out.println("runIntcodeComputer:ERROR");
-		return null;
+		return 99;
 	}
 	
 	private Long getValue(int pIndex){
@@ -85,10 +198,16 @@ class IncodeComputer{
 		return null;
 	}
 	
-	private boolean runDiagnostic (int pInput){
+	/**
+	 * Rueckgabewerte:
+	 * 99 = Ende des Programms
+	 *  0 = Beide Rueckgabewerte gefuellt
+	 *  1 = Komando ausgefuehrt, weiter
+	 **/
+	private int runDiagnostic (int pInput){
 		switch (this.vInst) {
 			case 99:
-				return false;
+				return 99;
 			case 1:
 				this.setValue(this.vIdx3, this.getValue(this.vIdx1) + this.getValue(this.vIdx2));
 				vPointer += 4;
@@ -106,7 +225,7 @@ class IncodeComputer{
 				this.countRV++;
 				this.vPointer += 2;
 				if (this.countRV > 1) {
-				    return false;
+				    return 0;
 				}
 				break;
 			case 5:
@@ -144,6 +263,6 @@ class IncodeComputer{
 			    this.vPointer += 2;
 				break;
 		}
-		return true;
+		return 1;
 	}
 }
