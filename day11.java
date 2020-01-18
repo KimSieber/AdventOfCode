@@ -18,12 +18,12 @@ class PaintingRobot {
      * 
      *  Koordinaten [y][x]
      **/
-    int[][] PanelMap = new int[500][500];
+    int[][] PanelMap = new int[10][50];
     /** Koordinaten von ActPos *********
      *  0 = x-Wert
      *  1 = y-Wert
      **/
-    int[] actPos = {250, 250};
+    int[] actPos = {2, 2};
     /** direction-Belegung ******
      *  0 = ^  (nach oben)
      *  1 = >  (nach rechts)
@@ -42,6 +42,12 @@ class PaintingRobot {
                 this.PanelMap[i][j] = -1;
             }
         }
+        /**
+         * For Part TWO:
+         * Initialisierung Start-Punkt als weisses Feld
+         **/
+        this.PanelMap[this.actPos[1]][this.actPos[0]] = 1;
+        
         int ret;
 		do {
 		    ret = IC.runIntcodeComputer(this.getColor());
@@ -53,16 +59,62 @@ class PaintingRobot {
 		} while(ret != 99);
         int cPP = countPaintedPanels();
         System.out.println("countPaintedPanels = "+cPP);
+	
+	// Zur Ermittlung der Dimensionen => Raster verkleinern fuer Ausgabe
+        //System.out.println("First x|y = "+this.getFirstX()+"|"+this.getFirstY());
+        //System.out.println("Last  x|y = "+this.getLastX()+"|"+this.getLastY());
+	    
+        /**
+         * For Part TWO:
+         * Ergebnis ausgeben/drucken
+         **/
+        this.printRegistration();
+    }
+ 
+    private int getFirstY() {
+        for (int y=0; y<this.PanelMap.length; y++) {
+            for (int x=0; x<this.PanelMap[0].length; x++) {
+                if (this.PanelMap[y][x] != -1) {
+                    return y;
+                }
+            }
+        }
+        return 0;
+    }
+    private int getFirstX() {
+        for (int x=0; x<this.PanelMap[0].length; x++) {
+            for (int y=0; y<this.PanelMap.length; y++) {
+                if (this.PanelMap[y][x] != -1) {
+                    return x;
+                }
+            }
+        }
+        return 0;
+    }
+    private int getLastY() {
+        for (int y=this.PanelMap.length-1; y>=0; y--) {
+            for (int x=this.PanelMap[0].length-1; x>=0; x--) {
+                if (this.PanelMap[y][x] != -1) {
+                    return y;
+                }
+            }
+        }
+        return 0;
+    }
+    private int getLastX() {
+        for (int x=this.PanelMap[0].length-1; x>=0; x--) {
+            for (int y=this.PanelMap.length-1; y>=0; y--) {
+                if (this.PanelMap[y][x] != -1) {
+                    return x;
+                }
+            }
+        }
+        return 0;
     }
 
     private int getColor() {
         int x = this.actPos[0];
         int y = this.actPos[1];
-        
-        if (this.actPos[0]<10 || this.actPos[1]<10) {
-            System.out.println("Koordinaten reichen nicht aus?: actPos="+x+"|"+y);
-        }
-        
         return (this.PanelMap[y][x]<0 ? 0 : this.PanelMap[y][x]);
     }
     
@@ -104,13 +156,32 @@ class PaintingRobot {
     private int countPaintedPanels() {
         int count = 0;
         for (int y=0; y<this.PanelMap.length; y++) {
-            for (int x=0; x<this.PanelMap.length; x++) {
+            for (int x=0; x<this.PanelMap[0].length; x++) {
                 if (this.PanelMap[y][x] != -1) {
                     count++;
                 }
             }
         }
         return count;
+    }
+    
+    private void printRegistration() {
+        for (int y=0; y<this.PanelMap.length; y++) {
+            for (int x=0; x<this.PanelMap[0].length; x++) {
+                switch (this.PanelMap[y][x]) {
+                    case -1:
+                    case 0:
+                        System.out.print(" ");
+                        break;
+                    case 1:
+                        System.out.print("X");
+                        break;
+                    default:
+                        System.out.print("************* ERROR *****************");
+                }
+            }
+            System.out.println("");
+        }
     }
 }
 
