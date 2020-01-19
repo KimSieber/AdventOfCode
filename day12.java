@@ -1,5 +1,3 @@
-
-
 public class day12 {
     public static void main(String args[]) {
         moon[] mo = new moon[4];
@@ -13,23 +11,23 @@ public class day12 {
 
         /**
          * Example 2
-         *
+         */
         mo[0] = new moon("Io",       -8,-10,  0);
         mo[1] = new moon("Europa",    5,  5, 10);
         mo[2] = new moon("Ganymede",  2, -7,  3);
-        mo[3] = new moon("Callisto",  9, -8, -3); */
+        mo[3] = new moon("Callisto",  9, -8, -3); 
         
         /**
          * Puzzle
-         */
+         *
         mo[0] = new moon("Io",       -6,  2, -9);
         mo[1] = new moon("Europa",   12,-14, -4);
         mo[2] = new moon("Ganymede",  9,  5, -6);
-        mo[3] = new moon("Callisto", -1, -4,  9); 
+        mo[3] = new moon("Callisto", -1, -4,  9); */
 
         print(0, mo);
 
-        for (int i=1; i<=1000; i++) {
+        for (long i=1L; i<=5000000000L; i++) {
             for (int m=0; m<mo.length; m++) {
                 for (int v=0; v<mo.length; v++) {
                     // nicht eigenen berechnen
@@ -40,13 +38,20 @@ public class day12 {
                     }
                 }
             }
+            int initPos = 0;
             for (int m=0; m<mo.length; m++) {
                 mo[m].posX += mo[m].velX;
                 mo[m].posY += mo[m].velY;
                 mo[m].posZ += mo[m].velZ;
+                initPos += (mo[m].initPos() ? 1 : 0);
             }
-            if (i%100==0) {
+            if (initPos==mo.length) {
+                System.out.println("It takes " + i + " steps before they exactly match a previous point in time"); 
                 print(i, mo);
+                
+            }
+            if (i%100000==0) {
+                //print(i, mo);
             }
         }
         
@@ -65,7 +70,7 @@ public class day12 {
         val = "          " + val;
         return val.substring(val.length() - len);
     }
-    private static void print(int step, moon[] mo) {
+    private static void print(long step, moon[] mo) {
         System.out.println("After "+step+" steps:");
         for (int i=0; i<mo.length; i++) {
             System.out.print("["+i+"] "+l10(mo[i].name));
@@ -91,15 +96,24 @@ class moon{
     public int posX;
     public int posY;
     public int posZ;
+    public int initPosX;
+    public int initPosY;
+    public int initPosZ;
     public int velX = 0;
     public int velY = 0;
     public int velZ = 0;
+    public int initVelX = 0;
+    public int initVelY = 0;
+    public int initVelZ = 0;
     
     public moon(String NameIn, int x, int y, int z) {
         name = NameIn;
         posX = x;
         posY = y;
         posZ = z;
+        initPosX = x;
+        initPosY = y;
+        initPosZ = z;
     }
     public int pot(){
         return (posX<0?posX*-1:posX)+(posY<0?posY*-1:posY)+(posZ<0?posZ*-1:posZ);
@@ -111,6 +125,12 @@ class moon{
     
     public int total(){
         return pot()*kin();
+    }
+    
+    public boolean initPos() {
+        boolean pos = (posX==initPosX && posY==initPosY && posZ==initPosZ ? true : false);
+        boolean vel = (velX==initVelX && velY==initVelY && velZ==initVelZ ? true : false);
+        return (pos==true & vel==true ? true : false);
     }
     
 }
