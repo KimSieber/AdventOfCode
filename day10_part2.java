@@ -1,3 +1,14 @@
+/**
+ * Advent of Code
+ *
+ * Day 10
+ *
+ * Lange Problem gesucht, da Beispiele funktionierten als auch Marvins Puzzle bei mir funktionierte.
+ * Problem lag in der Funktion minimizeDiff(), da bei Koordinaten (hoher) Primzahl, 0 der gemeinsame Teiler
+ * falsch berechnet wurde.
+ * Beispiele waren zu klein und Marvins Puzzle hatte überraschenderweise keinen Asteroiden auf einer Koordinate
+ * mit Primzahl sitzen. Daher viele Stunden verwende.
+ */
 import java.util.Scanner;
 import java.io.*;
 
