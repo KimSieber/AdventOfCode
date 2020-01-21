@@ -2,6 +2,11 @@
  * Advent of Code
  * 
  * Day 12 - Part Two
+ * 
+ * Teil 2 nur lösen können, mit nachkodierung von Marvins Lösung.
+ * Lösungsweg inzwischen verstanden, aber selbst nicht drauf gekommen
+ * => Suche nach der Anzahl Steps, an denen eine Achse (x, y oder z) wieder auf Ausgangswert ist
+ * => Multipliziere die Step-Werte mit suche nach kleinstem, gemeinsamen nenner (da kleinster Wert gesucht) 
  */
 public class day12 {
     /**
