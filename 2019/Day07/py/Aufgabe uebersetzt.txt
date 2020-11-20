@@ -1,0 +1,50 @@
+-- Tag 7: Verstärkungsschaltung ---
+
+Basierend auf den Navigationskarten müssen Sie mehr Leistung an die Triebwerke Ihres Schiffes senden, um den Weihnachtsmann rechtzeitig zu erreichen. Dazu müssen Sie eine Reihe von Verstärkern konfigurieren, die bereits auf dem Schiff installiert sind.
+
+Es sind fünf Verstärker in Reihe geschaltet. Jeder empfängt ein Eingangssignal und erzeugt ein Ausgangssignal. Sie sind so angeschlossen, dass der Ausgang des ersten Verstärkers zum Eingang des zweiten Verstärkers führt, der Ausgang des zweiten Verstärkers zum Eingang des dritten Verstärkers führt und so weiter. Der Eingangswert des ersten Verstärkers ist 0, und der Ausgang des letzten Verstärkers führt zu den Triebwerken Ihres Schiffes.
+
+   O-------O  O-------O  O-------O  O-------O  O-------O.
+0->| Amp A |->| Amp B |->| Amp C |->| Amp D |->| Amp E |->(zu Triebwerken)
+   O-------O  O-------O  O-------O  O-------O  O-------O
+
+Die Elfen haben Ihnen eine Verstärker-Controller-Software (Ihre Puzzle-Eingabe) geschickt, ein Programm, das auf Ihrem vorhandenen Intcode-Computer ausgeführt werden sollte. Jeder Verstärker muss eine Kopie des Programms ausführen.
+
+Wenn eine Kopie des Programms auf einem Verstärker ausgeführt wird, fragt der Verstärker zunächst anhand einer Eingabeanweisung nach seiner aktuellen Phaseneinstellung (eine Ganzzahl von 0 bis 4). Jede Phaseneinstellung wird genau einmal verwendet, aber die Elfen können sich nicht erinnern, welcher Verstärker welche Phaseneinstellung benötigt.
+
+Das Programm ruft dann einen anderen Eingangsbefehl auf, um das Eingangssignal des Verstärkers zu erhalten, das richtige Ausgangssignal zu berechnen und es mit einem Ausgangsbefehl an den Verstärker zurückzusenden. (Wenn der Verstärker noch kein Eingangssignal empfangen hat, wartet er, bis eines eintrifft.)
+
+Ihre Aufgabe ist es, das größte Ausgangssignal zu finden, das an die Triebwerke gesendet werden kann, indem Sie jede mögliche Kombination von Phaseneinstellungen an den Verstärkern ausprobieren. Stellen Sie sicher, dass der Speicher nicht zwischen Kopien des Programms geteilt oder wiederverwendet wird.
+
+Angenommen, Sie möchten die Phaseneinstellungssequenz 3,1,2,4,0 ausprobieren, was bedeutet, dass Verstärker A auf Phaseneinstellung 3, Verstärker B auf Einstellung 1, C auf 2, D auf 4 und E auf eingestellt werden 0. Dann können Sie das Ausgangssignal, das vom Verstärker E an die Triebwerke gesendet wird, mit den folgenden Schritten bestimmen:
+
+Starten Sie die Kopie der Verstärkersteuerungssoftware, die auf Verstärker A ausgeführt wird. Geben Sie bei der ersten Eingabeanweisung die Phaseneinstellung des Verstärkers 3 an. Geben Sie bei der zweiten Eingabeanweisung das Eingangssignal 0 ein. Nach einigen Berechnungen wird dies der Fall sein Verwenden Sie einen Ausgangsbefehl, um das Ausgangssignal des Verstärkers anzuzeigen.
+Starten Sie die Software für Verstärker B. Geben Sie die Phaseneinstellung (1) und dann das vom Verstärker A erzeugte Ausgangssignal ein. Anschließend wird ein neues Ausgangssignal für Verstärker C erzeugt.
+Starten Sie die Software für Verstärker C, geben Sie die Phaseneinstellung (2) und den Wert von Verstärker B ein und erfassen Sie das Ausgangssignal.
+Führen Sie die Software des Verstärkers D aus, geben Sie die Phaseneinstellung (4) und den Eingangswert ein und erfassen Sie das Ausgangssignal.
+Führen Sie die Software des Verstärkers E aus, geben Sie die Phaseneinstellung (0) und den Eingangswert ein und erfassen Sie das Ausgangssignal.
+Das endgültige Ausgangssignal vom Verstärker E würde an die Triebwerke gesendet. Diese Phaseneinstellungssequenz war jedoch möglicherweise nicht die beste. Eine andere Sequenz hat möglicherweise ein höheres Signal an die Triebwerke gesendet.
+
+
+
+-- Zweiter Teil ---
+
+Es ist nicht gut - in dieser Konfiguration können die Verstärker kein ausreichend großes Ausgangssignal erzeugen, um den benötigten Schub zu erzeugen. Die Elfen sprechen Sie schnell an, indem Sie die Verstärker in eine Rückkopplungsschleife umverdrahten:
+
+     O-------O  O-------O  O-------O  O-------O  O-------O
+0-+->| Amp A |->| Amp B |->| Amp C |->| Amp D |->| Amp E |-.
+  |  O-------O  O-------O  O-------O  O-------O  O-------O |
+  |                                                        |
+  '--------------------------------------------------------+
+                                                           |
+                                                           v
+                                                   (zu Triebwerken)
+Die meisten Verstärker sind wie zuvor angeschlossen. Der Ausgang von Verstärker A ist mit dem Eingang von Verstärker B verbunden und so weiter. Der Ausgang des Verstärkers E ist nun jedoch mit dem Eingang des Verstärkers A verbunden. Dadurch entsteht die Rückkopplungsschleife: Das Signal wird viele Male durch die Verstärker gesendet.
+
+Im Rückkopplungsschleifenmodus benötigen die Verstärker völlig unterschiedliche Phaseneinstellungen: Ganzzahlen von 5 bis 9, die jeweils genau einmal verwendet werden. Diese Einstellungen führen dazu, dass die Amplifier Controller-Software vor dem Anhalten wiederholt Eingaben und Ausgaben mehrmals entgegennimmt. Stellen Sie jedem Verstärker seine Phaseneinstellung bei seinem ersten Eingangsbefehl zur Verfügung. Alle weiteren Ein- / Ausgabeanweisungen gelten für Signale.
+
+Starten Sie die Amplifier Controller Software während dieses Vorgangs auf keinem Verstärker neu. Jeder sollte weiterhin Signale empfangen und senden, bis er anhält.
+
+Alle in diesem Prozess gesendeten oder empfangenen Signale befinden sich zwischen Verstärkerpaaren mit Ausnahme des allerersten Signals und des allerletzten Signals. Um den Prozess zu starten, wird genau einmal ein 0-Signal an den Eingang des Verstärkers A gesendet.
+
+Schließlich wird die Software auf den Verstärkern angehalten, nachdem sie die letzte Schleife verarbeitet haben. In diesem Fall wird das letzte Ausgangssignal vom Verstärker E an die Triebwerke gesendet. Ihre Aufgabe ist es, das größte Ausgangssignal zu finden, das mit den neuen Phaseneinstellungen und der Rückkopplungsschleifenanordnung an die Triebwerke gesendet werden kann.
