@@ -19,8 +19,6 @@ def readInputFile(fileName):
 	return entries
 
 
-
-
 entries = readInputFile("input.txt")
 
 #####################################################
@@ -36,8 +34,8 @@ for i in entries:
 
 print
 print "#########################################################################################"
-print "# PART I  ==> Product of two entries:   " + str(result[0][0] * result[0][1]) + "          (right answer: 960075)"
-print "#             entries:                  " + str(result)
+print "# PART I  ==> Product of two entries:    " + str(result[0][0] * result[0][1]) + "              (right answer: 960075)"
+print "#             entries:                   " + str(result)
 print
 
 
@@ -50,8 +48,6 @@ def checkEntry(entries, val1, val2, val3):
 			return True
 	return False
 
-#entries = readInputFile("input_test1.txt")
-
 result = []
 for i in entries:
 	for j in entries:
@@ -62,7 +58,7 @@ for i in entries:
 
 print
 print "#########################################################################################"
-print "# PART II ==> Product of two entries:   " + str(result[0][0] * result[0][1] * result[0][2]) + "        (right answer: 212900130)"
-print "#             entries:                  " + str(result)
+print "# PART II ==> Product of three entries:  " + str(result[0][0] * result[0][1] * result[0][2]) + "           (right answer: 212900130)"
+print "#             entries:                   " + str(result)
 print
 
