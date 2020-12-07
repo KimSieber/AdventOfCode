@@ -47,7 +47,7 @@ def listBags(color):
 		if regulations[bagKey] != 0:
 			if color in regulations[bagKey]:
 				cnt.append(bagKey) 
-				cnt = list(set(cnt + listBags(bagKey))) # = list(set(cnt + listBags(bagKey)))
+				cnt = list(set(cnt + listBags(bagKey)))
 	return cnt
 
 ### Ermittelt die Anzahl der Bags, die in einem Bag enthalten sind
@@ -69,6 +69,7 @@ readInputFile()
 #for reg in regulations:
 #	print (str(reg)+"    ")[:12] + " : " + str(regulations[reg])
 #print listBags("shiny gold")
+
 print
 print "PART I  : number of colors, that can containt at least one shiny gold bag   : " + str(len(listBags("shiny gold")))
 print
