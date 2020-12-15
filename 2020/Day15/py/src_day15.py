@@ -20,8 +20,11 @@ nums = [6,4,12,1,20,0,16]					# => Input-Puzzle
 import time
 
 ### Spielt das Memory-Game 
-### HINWEIS: statt die Liste num[] zu durchsuchen, wurde zur Performance-Optimierung 
-###          diese Speicherung gewaehlt
+### HINWEIS: In der ersten Version des Programms wurde die Liste nums[] je Runde ergaenzt
+###          und anschliessend in dieser gesucht (letztes Mal gesprochen, Anzahl nums, usw.)
+###          Dies hat eine enorme Laufzeit fuer PART II ergeben, so dass ein anderer Ansatz 
+###          gesucht wurde. Statt mir der Liste num[] zu arbeiten, wurde zur Performance-Optimierung 
+###          die Speicherung der letzten Position in einer eigenen dict gewaehlt
 ### 		 lastSpoken[Num] = ID
 ###          		    +----------- Nummer, die gesprochen wurde
 ###                   		   +---- Letzter ID/Turn, an dem die Nummer gesprochen wurde
@@ -29,15 +32,14 @@ import time
 ### @return	:	(int) Letzte gesprochene Zahl
 def startGame(turns):
 	print("START-TIME: ",time.ctime())
-	### Statt Liste Nums zu ergaenzen, letzte Zahl festhalten bis naechste Runde
+	### Neu hinzugefuegte/gesprochene Zahl aus letzter Runde -> initialisiert mit letzter Vorgabe-Zahl
 	newNum = nums[-1]
-	### Initialisiere lastSpoken mit gesetzten Zahlen
+	### Initialisiere lastSpoken mit Vorgabe-Zahlen
 	lastSpoken = {}
 	for k, v in enumerate(nums):  		
 		lastSpoken[v] = k
-	### Schleife fuer alle Turns  (-> minimiert fuer Laufzeitoptimierung)
-	numsLen = len(nums)
-	for turn in range(numsLen,turns):
+	### Schleife fuer alle Turns 
+	for turn in range(len(nums),turns):
 		lastNum = newNum 
 		if lastNum not in lastSpoken:
 			newNum = 0
@@ -56,7 +58,3 @@ print()
 
 print("PART II : the 30000000th spoken number is: ", startGame(30000000))
 print()
-
-
-
-
