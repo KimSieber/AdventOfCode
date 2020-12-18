@@ -11,30 +11,30 @@
 FILENAME = "input.txt"
 
 ### Wuerfel-Auflistung
-### cubes = {(x,y,z,w):value} 
-###           +------------------- (int) Wert der X-Achse
-###             +----------------- (int) Wert der Y-Achse
-###               +--------------- (int) Wert der Z-Achse
-###                    +---------- (str) '#' = aktiv, '.' = inaktiv
-###                  +------------ (int) Wert der W-Achse, nur fuer cubes2
-cubes  = {}
-cubes2 = {}
+### cubes3d/4d = {(x,y,z,w):value} 
+###        		   +------------------- (int) Wert der X-Achse
+###             	 +----------------- (int) Wert der Y-Achse
+###              	   +--------------- (int) Wert der Z-Achse
+###                    		+---------- (str) '#' = aktiv, '.' = inaktiv
+###                  	 +------------- (int) Wert der W-Achse, nur fuer cubes4d
+cubes3d = {}
+cubes4d = {}
 
 ### Liest Datei ein und erzeugt Navigations-Anweisungs-Liste
+### @return 	cubes3d, cubes4d		-> Beschreibung s.o.
 def readInputFile():
-	global cubes
-	global cubes2
 	inputs = []
 	inputFile = open(FILENAME, "r")
 	for line in inputFile:
 		inputs.append(list(line.strip()))
 	inputFile.close()
-	cubes = {(x,y,0):inputs[y][x]
+	cubes3d = {(x,y,0):inputs[y][x]
 		     for x in range(len(inputs[0]))
 	    	 for y in range(len(inputs   )) }
-	cubes2 = {(x,y,0,0):inputs[y][x]
+	cubes4d = {(x,y,0,0):inputs[y][x]
 		       for x in range(len(inputs[0]))
 	    	   for y in range(len(inputs   )) }
+	return cubes3d, cubes4d
 
 
 ### Gibt eine Liste von Nachbarfeldern zurück
@@ -90,24 +90,20 @@ def runCycle(cubes):
 	return newCubes
 
 ### Zaehlt Anzahl aktive Wuerfel
-### @dim 	:	(int) 3- oder 4-dimensional angeben
+### @cubes  :   {(x,y,z,w):value} 		-> kann 3- oder 4-dimensional sein
 ### @return	:	(int) Anzahl aktive (="#") Wuerfel auf dem Spielfeld
-def cntActiveCubes(dim):
-	if dim == 3:
-		return list(cubes.values()).count("#")
-	elif dim == 4:
-		return list(cubes2.values()).count("#")
+def cntActiveCubes(cubes):
+	return list(cubes.values()).count("#")
 
-readInputFile()
 
+cubes3d, cubes4d = readInputFile()
+
+print("starting ... please wait ... (est. 20 sec)")
 for i in range(6):
-	cubes = runCycle(cubes)
+	cubes3d = runCycle(cubes3d)
+	cubes4d = runCycle(cubes4d)
 print()
-print("PART I  : Number of active cubes in a 3-dimensional space after ", i+1, " cycles: ", cntActiveCubes(3))
+print("PART I  : Number of active cubes in a 3-dimensional space after ", i+1, " cycles: ", cntActiveCubes(cubes3d))
 print()
-
-for i in range(6):
-	cubes2 = runCycle(cubes2)
-print()
-print("PART II : Number of active cubes in a 4-dimensional space after ", i+1, " cycles: ", cntActiveCubes(4))
+print("PART II : Number of active cubes in a 4-dimensional space after ", i+1, " cycles: ", cntActiveCubes(cubes4d))
 print()
