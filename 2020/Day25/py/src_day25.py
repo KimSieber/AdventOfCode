@@ -23,7 +23,10 @@ def getLoopSize(public_key):
         val = val % 20201227
     return loop
 
-
+### Ermittelt den Verschluesselungs-Schluessel
+### @public_key         = (int) Oeffentlicher Schluessel
+### @loop_size          = (int) Anzahl Loops = Loop-Size
+### @return             = (int) encryption key
 def getEncryptKey(public_key, loop_size):
     val  = 1
     for _ in range(loop_size):
