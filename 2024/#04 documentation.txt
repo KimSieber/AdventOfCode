@@ -1,0 +1,44 @@
+----------------------------------------------
+--- Advent of Code 2024                    ---
+--- Day 04 - Ceres Search                  ---
+----------------------------------------------
+
+Created: Wed Dec  4 20:54:39 2024
+Author : Kim Sieber
+
+Description:
+This program is designed for the Advent of Code 2024, Day 04 challenge titled "Ceres Search".
+It reads a field of characters from a file, searches for specific patterns ("XMAS" and "X-MAS")
+within this field, and counts their occurrences.
+
+File Input:
+- The program expects an input file named "#04 Puzzle.txt" located in the same directory as the script.
+- The file should contain a grid of characters, each line representing one row of the grid.
+
+Usage:
+1. Ensure the input file "#04 Puzzle.txt" is in the same directory as this script.
+2. Run the script using a Python 3 interpreter.
+
+Functionality:
+
+Part I: Counting "XMAS"
+- The function `check_xmas(field: list, x: int, y: int) -> int` checks if the string "XMAS" appears starting from the position (x, y) in any direction.
+- It uses the nested function `check_direction(add: list) -> bool` to check specific directions based on coordinate adjustments.
+- The script iterates over the grid to count how many times "XMAS" appears in any direction.
+
+Part II: Counting "X-MAS"
+- The function `check_X_mas(field: list, x: int, y: int) -> bool` checks if the character "X" at position (x, y) is part of the pattern "X-MAS".
+- It verifies if "X" is surrounded by the letters "MAS" or "SAM" in specific diagonal patterns.
+- The script iterates over the grid to count how many times "X-MAS" appears.
+
+Output:
+- The program prints the number of occurrences for both "XMAS" and "X-MAS".
+
+Example Output:
+PART I: How many times does XMAS appear? : [count]
+PART II: How many times does X-MAS appear? : [count]
+
+Note:
+- Adjustments to the input file format or the search patterns may be needed for different challenges or datasets.
+
+End of Documentation
